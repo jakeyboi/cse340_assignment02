@@ -11,7 +11,7 @@ using System.Threading;
 
 //TODO: create event to fire back once order is completed
 
-namespace Assignment02_jake_v1
+namespace Assignment2
 {
     class OrderProcessing
     {
@@ -28,14 +28,14 @@ namespace Assignment02_jake_v1
             this.order = order;
         }
 
-        public void processNewOrder()
+        public void ProcessNewOrder()
         {
             // check credit card # and calculate cost based on amount
             // unitPrice*NoOfTickets + Tax + LocationCharge
 
             // Buffer??? why not just a call back? would it go to the wrong agency? 
             // is there logic we could write to have an agency subscribe to a specific order?
-            double totalCost = order.getUnitPrice() * order.getAmount() + TAX + LOCATION_CHARGE;
+            double totalCost = order.GetUnitPrice() * order.GetAmount() + TAX + LOCATION_CHARGE;
 
             // send order confirmation to TravelAgency/print on screen
             Console.WriteLine(totalCost);
@@ -48,9 +48,9 @@ namespace Assignment02_jake_v1
         }
 
         // start a new thread to process the order here
-        public void processOrderWithNewThread()
+        public void ProcessOrderWithNewThread()
         {
-            Thread orderThread = new Thread(processNewOrder);
+            Thread orderThread = new Thread(ProcessNewOrder);
             orderThread.Start();
         }
     }

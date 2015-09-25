@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Assignment02_jake_v1
+namespace Assignment2
 {
-    public delegate void priceCutEvent(int priceCut);
+    public delegate void PriceCutDelegate(int priceCut);
 
     class Airline
     {
@@ -17,7 +17,7 @@ namespace Assignment02_jake_v1
         private int priceCutCounter;
         private PricingModel pricingModel;
 
-        public static event priceCutEvent priceCut;
+        public static event PriceCutDelegate PriceCutEvent;
 
         public Airline()
         {
@@ -27,15 +27,20 @@ namespace Assignment02_jake_v1
             pricingModel = new PricingModel();
         }
 
-        public void generateTicketPrice()
+        public int GetTicketPrice()
         {
-            int newPrice = pricingModel.generateTicketPrice(ticketPrice, ticketsAvailable, orderCounter);
-            if (ticketPrice > newPrice)
+            return ticketPrice;
+        }
+
+        public void GenerateTicketPrice()
+        {
+            int newPrice = pricingModel.GenerateTicketPrice(ticketPrice, ticketsAvailable, orderCounter);
+            if (newPrice < ticketPrice)
             {
                 // price cut!! Trigger an event that calls the Travel Agency
-                if(priceCut != null)
+                if (PriceCutEvent != null)
                 {
-                    priceCut(newPrice);
+                    PriceCutEvent(newPrice);
                 }
 
                 // need to verify what this is for?
@@ -47,18 +52,18 @@ namespace Assignment02_jake_v1
                 ticketPrice = newPrice; // no event
         }
 
-        public void orderProcessing(String ordStr)
+        public void OrderProcessing(String ordStr)
         {
             orderCounter++;
-            OrderClass order = Decoder.decodeOrder(ordStr);
+            OrderClass order = Decoder.DecodeOrder(ordStr);
             
             // need to set the order's ticket price to the airline's price
-            order.setUnitPrice(ticketPrice);
-            ticketsAvailable -= order.getAmount(); 
+            order.SetUnitPrice(ticketPrice);
+            ticketsAvailable -= order.GetAmount(); 
 
             // start thread running OrderProcessing class method 
             OrderProcessing ordPrc = new OrderProcessing(order);
-            ordPrc.processOrderWithNewThread();
+            ordPrc.ProcessOrderWithNewThread();
 
         }
 

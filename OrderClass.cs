@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment02_jake_v1
+namespace Assignment2
 {
     class OrderClass
     {
@@ -15,62 +15,62 @@ namespace Assignment02_jake_v1
         private int unitPrice;
         private DateTime timestamp;
 
-        public void setSenderId(String senderId)
+        public void SetSenderId(String senderId)
         {
             this.senderId = senderId;
         }
 
-        public String getSenderId()
+        public String GetSenderId()
         {
             return senderId;
         }
 
-        public void setCardNo(int cardNo)
+        public void SetCardNo(int cardNo)
         {
             this.cardNo = cardNo;
         }
 
-        public int getCardNo()
+        public int GetCardNo()
         {
             return cardNo;
         }
 
-        public void setReceiverId(String receiverId)
+        public void SetReceiverId(String receiverId)
         {
             this.receiverId = receiverId;
         }
 
-        public String getReceiverId()
+        public String GetReceiverId()
         {
             return receiverId;
         }
 
-        public void setAmount(int amount)
+        public void SetAmount(int amount)
         {
             this.amount = amount;
         }
 
-        public int getAmount()
+        public int GetAmount()
         {
             return amount;
         }
 
-        public void setUnitPrice(int unitPrice)
+        public void SetUnitPrice(int unitPrice)
         {
             this.unitPrice = unitPrice;
         }
 
-        public int getUnitPrice()
+        public int GetUnitPrice()
         {
             return unitPrice;
         }
 
-        public void setTimestamp(DateTime timestamp)
+        public void SetTimestamp(DateTime timestamp)
         {
             this.timestamp = timestamp;
         }
 
-        public DateTime getTimestamp()
+        public DateTime GetTimestamp()
         {
             return timestamp;
         }

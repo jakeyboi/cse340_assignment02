@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment02_jake_v1
+namespace Assignment2
 {
     class PricingModel
     {
@@ -17,7 +17,7 @@ namespace Assignment02_jake_v1
             random = new Random();
         }
 
-        public int generateTicketPrice(int currentPrice, int ticketsAvailable, int ordersReceived)
+        public int GenerateTicketPrice(int currentPrice, int ticketsAvailable, int ordersReceived)
         {
             int newPrice = 0;
             DateTime dt = new DateTime();

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment02_jake_v1
+namespace Assignment2
 {
     class Encoder
     {
-        public static String encodeOrder(OrderClass order)
+        public static String EncodeOrder(OrderClass order)
         {
-            String ordStr = order.getSenderId() + "," + Convert.ToInt32(order.getCardNo()) + "," + order.getReceiverId()
-                + "," + Convert.ToInt32(order.getAmount()) + "," + Convert.ToInt32(order.getUnitPrice()) + "," 
-                + Convert.ToString(order.getTimestamp());
+            String ordStr = order.GetSenderId() + "," + Convert.ToInt32(order.GetCardNo()) + "," + order.GetReceiverId()
+                + "," + Convert.ToInt32(order.GetAmount()) + "," + Convert.ToInt32(order.GetUnitPrice()) + "," 
+                + Convert.ToString(order.GetTimestamp());
 
             return ordStr;
         }
