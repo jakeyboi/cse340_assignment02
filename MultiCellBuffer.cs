@@ -3,40 +3,54 @@ using System.Threading;
 
 namespace Assignment2
 {
-
     public class MultiCellBuffer
     {
-        private OrderClass[] buffer = new OrderClass[3];
-        private bool writeable = true;
+        private String[] buffer = new String[3];
+        public Semaphore sem = new Semaphore(0, 3);
 
-        public void SetOneCell(OrderClass order)
+        public void SetOneCell(String orderStr)
         {
-            while (!writeable)
+            lock (buffer)
             {
-                try
+                for (int i = 0; i < buffer.Length; i++)
                 {
-                    Monitor.Wait(this);
+                    if (buffer[i] == null)
+                    {
+                        buffer[i] = orderStr;
+                    }
                 }
-                catch { Console.WriteLine("Error in setOneCell method."); }
             }
-
-            // Method logic here
         }
 
-        public OrderClass GetOneCell()
+        public String GetOneCell(String receiverId)
         {
-            while (writeable)
+            lock (buffer)
             {
-                try
+                OrderClass order = new OrderClass();
+                String orderStr = null;
+                int orderIndex = -1;
+
+                for (int i = 0; i < buffer.Length; i++)
                 {
-                    Monitor.Wait(this);
+                    if (buffer[i] != null)
+                    {
+                        order = Decoder.DecodeOrder(buffer[i]);
+
+                        if (order.GetReceiverId() == receiverId)
+                        {
+                            orderStr = buffer[i];
+                            orderIndex = i;
+                        }
+                    }
                 }
-                catch { Console.WriteLine("Error in getOneCell method."); }
+
+                if (orderStr != null)
+                {
+                    buffer[orderIndex] = null;
+                }
+
+                return orderStr;
             }
-
-            // Method logic here
-
-            
         }
     }
 }

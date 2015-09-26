@@ -19,9 +19,6 @@ namespace Assignment2
         private const double TAX = 0.1;
         private const double LOCATION_CHARGE = 10.00;
 
-        // credit card # must be between 5000 and 7000
-
-
         // process the order here
         public OrderProcessing(OrderClass order)
         {
@@ -30,28 +27,29 @@ namespace Assignment2
 
         public void ProcessNewOrder()
         {
-            // check credit card # and calculate cost based on amount
-            // unitPrice*NoOfTickets + Tax + LocationCharge
+            if (CardIsValid(order.GetCardNo()))
+            {
+                double totalCost = order.GetUnitPrice() * order.GetAmount() + TAX + LOCATION_CHARGE;
+                Console.WriteLine("Total cost of order for " + order.GetReceiverId() + " from " + order.GetSenderId() + " is " + totalCost);
 
-            // Buffer??? why not just a call back? would it go to the wrong agency? 
-            // is there logic we could write to have an agency subscribe to a specific order?
-            double totalCost = order.GetUnitPrice() * order.GetAmount() + TAX + LOCATION_CHARGE;
+                String temp = order.GetReceiverId();
+                order.SetReceiverId(order.GetSenderId());
+                order.SetSenderId(temp);
 
-            // send order confirmation to TravelAgency/print on screen
-            Console.WriteLine(totalCost);
+                // Encode confirmation
+                String confStr = Encoder.EncodeOrder(order);
 
-
-            // send confirmation here?
-
-
-            // BUFFER: Could just use an instance of the buffer class. use senderID?
+                // Write to confirmationBuffer
+                MainProgram.confirmationBuffer.sem.WaitOne();
+                MainProgram.confirmationBuffer.SetOneCell(confStr);
+                Console.WriteLine(order.GetSenderId() + " has sent confirmation to " + order.GetReceiverId() + ".");
+            }
         }
 
-        // start a new thread to process the order here
-        public void ProcessOrderWithNewThread()
+        // credit card # must be between 5000 and 7000
+        private bool CardIsValid(int cardNo)
         {
-            Thread orderThread = new Thread(ProcessNewOrder);
-            orderThread.Start();
+            return (cardNo >= 5000 && cardNo <= 7000);
         }
     }
 }

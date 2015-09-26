@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Assignment2;
 
 namespace Assignment2
 {
-    public delegate void PriceCutDelegate(int priceCut);
+    public delegate void PriceCutDelegate(String airlineId, int priceCut);
 
     class Airline
     {
@@ -24,6 +25,7 @@ namespace Assignment2
             ticketsAvailable = 100;
             ticketPrice = 500;
             orderCounter = 0;
+            priceCutCounter = 0;
             pricingModel = new PricingModel();
         }
 
@@ -32,15 +34,46 @@ namespace Assignment2
             return ticketPrice;
         }
 
+        public void AirlineFunc()
+        {
+            Console.WriteLine(Thread.CurrentThread.Name +  " has started running.");
+            
+            while (priceCutCounter <= 20)
+            {
+                GenerateTicketPrice();
+                
+                // Read an order from the buffer
+                String orderStr = MainProgram.orderBuffer.GetOneCell(Thread.CurrentThread.Name);
+
+                // If an order for the airline was received, process order
+                if (orderStr != null)
+                {
+                    MainProgram.orderBuffer.sem.Release(1);
+                    OrderClass order = Decoder.DecodeOrder(orderStr);
+                    Console.WriteLine(Thread.CurrentThread.Name + " has received order from " + order.GetSenderId() + " for " + order.GetAmount() + " tickets at price " + order.GetUnitPrice() + " each.");
+
+                    orderCounter++;
+                    ticketsAvailable -= order.GetAmount();
+                    OrderProcessing orderProc = new OrderProcessing(order);
+                    Thread orderProcThread = new Thread(new ThreadStart(orderProc.ProcessNewOrder));
+                    orderProcThread.Start();
+                }
+            }
+
+            MainProgram.airlineThreadCount--;
+        }
+
         public void GenerateTicketPrice()
         {
             int newPrice = pricingModel.GenerateTicketPrice(ticketPrice, ticketsAvailable, orderCounter);
             if (newPrice < ticketPrice)
             {
+                Console.WriteLine(Thread.CurrentThread.Name + " has generated a price cut with new price " + newPrice + ".");
+
                 // price cut!! Trigger an event that calls the Travel Agency
                 if (PriceCutEvent != null)
                 {
-                    PriceCutEvent(newPrice);
+                    PriceCutEvent(Thread.CurrentThread.Name, newPrice);
                 }
 
                 // need to verify what this is for?
@@ -51,21 +84,5 @@ namespace Assignment2
             else
                 ticketPrice = newPrice; // no event
         }
-
-        public void OrderProcessing(String ordStr)
-        {
-            orderCounter++;
-            OrderClass order = Decoder.DecodeOrder(ordStr);
-            
-            // need to set the order's ticket price to the airline's price
-            order.SetUnitPrice(ticketPrice);
-            ticketsAvailable -= order.GetAmount(); 
-
-            // start thread running OrderProcessing class method 
-            OrderProcessing ordPrc = new OrderProcessing(order);
-            ordPrc.ProcessOrderWithNewThread();
-
-        }
-
     }
 }
