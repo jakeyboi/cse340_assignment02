@@ -33,12 +33,17 @@ namespace Assignment2
                     Console.WriteLine(Thread.CurrentThread.Name + " received price cut event from " + orderToBePlaced.GetReceiverId() + " with new price " + orderToBePlaced.GetUnitPrice() + ".");
 
                     orderToBePlaced.SetSenderId(Thread.CurrentThread.Name);
+                    orderToBePlaced.SetTimestamp(DateTime.Now);
+                    Console.WriteLine(orderToBePlaced.GetTimestamp());
 
                     // Encode the order for transmission
                     String orderStr = Encoder.EncodeOrder(orderToBePlaced);
 
+
                     // Write to buffer
+                    Console.WriteLine("ORDER BUFFER WAIT ONE, TRAVEL AGENCY, from travel agency " + orderToBePlaced.GetSenderId() + " to " + orderToBePlaced.GetReceiverId());
                     MainProgram.orderBuffer.sem.WaitOne();
+                    
                     MainProgram.orderBuffer.SetOneCell(orderStr);
 
                     // Update current price
@@ -54,9 +59,11 @@ namespace Assignment2
                 // If a confirmation was received
                 if (confString != null)
                 {
+                    Console.WriteLine("CONF BUFFER RELEASE, TRAVEL AGENCY, from Airline " + orderToBePlaced.GetSenderId() + " to " + orderToBePlaced.GetReceiverId());
                     MainProgram.confirmationBuffer.sem.Release(1);
+ 
                     OrderClass order = Decoder.DecodeOrder(confString);
-                    Console.WriteLine(Thread.CurrentThread.Name + " received order confirmation from " + order.GetSenderId() + " for order of unit price " + order.GetUnitPrice() + ".");
+                    Console.WriteLine(Thread.CurrentThread.Name + " received order confirmation from " + order.GetSenderId() + " for order of unit price " + order.GetUnitPrice() + " orderded at " + order.GetTimestamp());
                 }
             }
         }

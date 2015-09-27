@@ -49,8 +49,11 @@ namespace Assignment2
                 // If an order for the airline was received, process order
                 if (orderStr != null)
                 {
-                    MainProgram.orderBuffer.sem.Release(1);
                     OrderClass order = Decoder.DecodeOrder(orderStr);
+                    Console.WriteLine("ORDER BUFFER RELEASE, AIRLINE, from travel agency " + order.GetSenderId() + " to " + order.GetReceiverId());
+                    MainProgram.orderBuffer.sem.Release(1);
+                    
+                    
                     Console.WriteLine(Thread.CurrentThread.Name + " has received order from " + order.GetSenderId() + " for " + order.GetAmount() + " tickets at price " + order.GetUnitPrice() + " each.");
 
                     orderCounter++;

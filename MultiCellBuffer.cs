@@ -17,6 +17,7 @@ namespace Assignment2
                     if (buffer[i] == null)
                     {
                         buffer[i] = orderStr;
+                        return;
                     }
                 }
             }

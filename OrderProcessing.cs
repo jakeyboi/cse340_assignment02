@@ -16,7 +16,7 @@ namespace Assignment2
     class OrderProcessing
     {
         private OrderClass order;
-        private const double TAX = 0.1;
+        private const double TAX = 1.1;
         private const double LOCATION_CHARGE = 10.00;
 
         // process the order here
@@ -29,7 +29,7 @@ namespace Assignment2
         {
             if (CardIsValid(order.GetCardNo()))
             {
-                double totalCost = order.GetUnitPrice() * order.GetAmount() + TAX + LOCATION_CHARGE;
+                double totalCost = (order.GetUnitPrice() * order.GetAmount() + LOCATION_CHARGE) * TAX;
                 Console.WriteLine("Total cost of order for " + order.GetReceiverId() + " from " + order.GetSenderId() + " is " + totalCost + " at unit price " + order.GetUnitPrice() + ".");
 
                 String temp = order.GetReceiverId();
@@ -40,7 +40,9 @@ namespace Assignment2
                 String confStr = Encoder.EncodeOrder(order);
 
                 // Write to confirmationBuffer
+                Console.WriteLine("CONF BUFFER WAIT ONE, ORDER PROCESSING, from travel agency " + order.GetSenderId() + " to " + order.GetReceiverId());
                 MainProgram.confirmationBuffer.sem.WaitOne();
+               
                 MainProgram.confirmationBuffer.SetOneCell(confStr);
                 Console.WriteLine(order.GetSenderId() + " has sent confirmation to " + order.GetReceiverId() + " for order of unit price " + order.GetUnitPrice() + ".");
             }
