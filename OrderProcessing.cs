@@ -30,7 +30,7 @@ namespace Assignment2
             if (CardIsValid(order.GetCardNo()))
             {
                 double totalCost = order.GetUnitPrice() * order.GetAmount() + TAX + LOCATION_CHARGE;
-                Console.WriteLine("Total cost of order for " + order.GetReceiverId() + " from " + order.GetSenderId() + " is " + totalCost);
+                Console.WriteLine("Total cost of order for " + order.GetReceiverId() + " from " + order.GetSenderId() + " is " + totalCost + " at unit price " + order.GetUnitPrice() + ".");
 
                 String temp = order.GetReceiverId();
                 order.SetReceiverId(order.GetSenderId());
@@ -42,7 +42,7 @@ namespace Assignment2
                 // Write to confirmationBuffer
                 MainProgram.confirmationBuffer.sem.WaitOne();
                 MainProgram.confirmationBuffer.SetOneCell(confStr);
-                Console.WriteLine(order.GetSenderId() + " has sent confirmation to " + order.GetReceiverId() + ".");
+                Console.WriteLine(order.GetSenderId() + " has sent confirmation to " + order.GetReceiverId() + " for order of unit price " + order.GetUnitPrice() + ".");
             }
         }
 

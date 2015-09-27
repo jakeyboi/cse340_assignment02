@@ -14,8 +14,8 @@ namespace Assignment2
         {
             // Initialize Airline and TravelAgency objects
             Airline airline0 = new Airline();
-            Airline airline1 = new Airline();
-            Airline airline2 = new Airline();
+            //Airline airline1 = new Airline();
+            //Airline airline2 = new Airline();
             TravelAgency travelAgency = new TravelAgency();
 
             // Initialize and start Threads
@@ -23,18 +23,18 @@ namespace Assignment2
             airline0Thread.Name = "Airline 0";
             airline0Thread.Start();
             airlineThreadCount++;
-            Thread airline1Thread = new Thread(new ThreadStart(airline1.AirlineFunc));
-            airline1Thread.Name = "Airline 1";
-            airline1Thread.Start();
-            airlineThreadCount++;
-            Thread airline2Thread = new Thread(new ThreadStart(airline2.AirlineFunc));
-            airline2Thread.Name = "Airline 2";
-            airline2Thread.Start();
-            airlineThreadCount++;
+            //Thread airline1Thread = new Thread(new ThreadStart(airline1.AirlineFunc));
+            //airline1Thread.Name = "Airline 1";
+            //airline1Thread.Start();
+            //airlineThreadCount++;
+            //Thread airline2Thread = new Thread(new ThreadStart(airline2.AirlineFunc));
+            //airline2Thread.Name = "Airline 2";
+            //airline2Thread.Start();
+            //airlineThreadCount++;
 
             Thread[] travelAgencies = new Thread[5];
 
-            for (int i = 100; i < 105; i++)
+            for (int i = 100; i < 101; i++)
             {
                 travelAgencies[i - 100] = new Thread(new ThreadStart(travelAgency.TravelAgencyFunc));
                 travelAgencies[i - 100].Name = "Travel Agency " + i;
@@ -46,6 +46,7 @@ namespace Assignment2
 
             // Release 3 slots to start program
             orderBuffer.sem.Release(3);
+            confirmationBuffer.sem.Release(3);
 
             Console.ReadLine();
         }

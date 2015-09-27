@@ -40,6 +40,7 @@ namespace Assignment2
             
             while (priceCutCounter <= 20)
             {
+                Thread.Sleep(100);
                 GenerateTicketPrice();
                 
                 // Read an order from the buffer
