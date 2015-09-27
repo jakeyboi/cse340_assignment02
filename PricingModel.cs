@@ -9,8 +9,6 @@ namespace Assignment2
     class PricingModel
     {
         private Random random;
-        private const int HIGH_PRICE = 900;
-        private const int LOW_PRICE = 100;
 
         public PricingModel()
         {

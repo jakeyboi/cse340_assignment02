@@ -49,7 +49,6 @@ namespace Assignment2
                 {
                     buffer[orderIndex] = null;
                 }
-
                 return orderStr;
             }
         }

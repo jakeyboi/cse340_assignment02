@@ -36,8 +36,6 @@ namespace Assignment2
 
         public void AirlineFunc()
         {
-            Console.WriteLine(Thread.CurrentThread.Name +  " has started running.");
-            
             while (priceCutCounter <= 20)
             {
                 Thread.Sleep(100);
@@ -51,9 +49,6 @@ namespace Assignment2
                 {
                     OrderClass order = Decoder.DecodeOrder(orderStr);
                     MainProgram.orderBuffer.sem.Release(1);
-
-                    Console.WriteLine(Thread.CurrentThread.Name + " has received order from " + order.GetSenderId() + " for " + order.GetAmount() + " tickets at price " + order.GetUnitPrice() + " each.");
-
                     orderCounter++;
                     ticketsAvailable -= order.GetAmount();
                     OrderProcessing orderProc = new OrderProcessing(order);
@@ -61,8 +56,6 @@ namespace Assignment2
                     orderProcThread.Start();
                 }
             }
-
-            Console.WriteLine("AIRLINE THREAD TERMINATING: " + Thread.CurrentThread.Name);
             MainProgram.airlineThreadCount--;
         }
 
@@ -71,16 +64,13 @@ namespace Assignment2
             int newPrice = pricingModel.GenerateTicketPrice(ticketPrice, ticketsAvailable, orderCounter);
             if (newPrice < ticketPrice)
             {
-                Console.WriteLine(Thread.CurrentThread.Name + " has generated a price cut with new price " + newPrice + ".");
-
                 // price cut!! Trigger an event that calls the Travel Agency
                 if (PriceCutEvent != null)
                 {
                     PriceCutEvent(Thread.CurrentThread.Name, newPrice);
                 }
 
-                // need to verify what this is for?
-                // if it reaches a certain number, the airline thread will terminate
+                // if it reaches 20, the airline thread will terminate
                 priceCutCounter++;
                 ticketPrice = newPrice;
             }

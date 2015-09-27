@@ -23,32 +23,27 @@ namespace Assignment2
         // Thread method
         public void TravelAgencyFunc()
         {
-            Console.WriteLine(Thread.CurrentThread.Name + " has started running.");
-
             while (MainProgram.airlineThreadCount > 0)
             {
                 // Check if an order should be placed
                 if (placeOrder)
                 {                  
-                    Console.WriteLine(Thread.CurrentThread.Name + " received price cut event from " + orderToBePlaced.GetReceiverId() + " with new price " + orderToBePlaced.GetUnitPrice() + ".");
-
                     orderToBePlaced.SetSenderId(Thread.CurrentThread.Name);
                     orderToBePlaced.SetTimestamp(DateTime.Now);
-                    Console.WriteLine(orderToBePlaced.GetTimestamp());
+
+                    // print order to the console
+                    Console.WriteLine(orderToBePlaced.GetSenderId() + " has placed an order for " + orderToBePlaced.GetAmount() 
+                    + " tickets for " + orderToBePlaced.GetUnitPrice() + " each at " + orderToBePlaced.GetTimestamp());
 
                     // Encode the order for transmission
                     String orderStr = Encoder.EncodeOrder(orderToBePlaced);
 
-
                     // Write to buffer
                     MainProgram.orderBuffer.sem.WaitOne();
-                    
                     MainProgram.orderBuffer.SetOneCell(orderStr);
 
                     // Update current price
                     currentPrice = orderToBePlaced.GetUnitPrice();
-
-                    Console.WriteLine(Thread.CurrentThread.Name + " has placed an order of " + orderToBePlaced.GetAmount() + " tickets from " + orderToBePlaced.GetReceiverId() + " for the price of " + orderToBePlaced.GetUnitPrice() + " each.");
                     placeOrder = false;
                 }
 
@@ -58,15 +53,12 @@ namespace Assignment2
                 // If a confirmation was received
                 if (confString != null)
                 {
-                    Console.WriteLine("CONF BUFFER RELEASE, TRAVEL AGENCY, from Airline " + orderToBePlaced.GetSenderId() + " to " + orderToBePlaced.GetReceiverId());
                     MainProgram.confirmationBuffer.sem.Release(1);
- 
                     OrderClass order = Decoder.DecodeOrder(confString);
-                    Console.WriteLine(Thread.CurrentThread.Name + " received order confirmation from " + order.GetSenderId() + " for order of unit price " + order.GetUnitPrice() + " orderded at " + order.GetTimestamp());
+                    Console.WriteLine(Thread.CurrentThread.Name + " received order confirmation from " + order.GetSenderId() + " for " 
+                        + order.GetAmount() + " at " + order.GetUnitPrice() + " each ordered at " + order.GetTimestamp());
                 }
             }
-
-            Console.WriteLine("TRAVEL AGENCY THREAD TERMINATING: " + Thread.CurrentThread.Name);
         }
 
         // Event handler for the Airline to call when a price-cut event occurs
