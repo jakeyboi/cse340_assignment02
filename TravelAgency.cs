@@ -38,6 +38,8 @@ namespace Assignment2
                     String orderStr = Encoder.EncodeOrder(orderToBePlaced);
 
                     // Write to buffer
+                    //Console.WriteLine("SEMAPHORE WRITING ONE in Travel Agency thread...");
+                    //Console.WriteLine("... for order of unit price " + orderToBePlaced.GetUnitPrice() + ".");
                     MainProgram.orderBuffer.sem.WaitOne();
                     MainProgram.orderBuffer.SetOneCell(orderStr);
 
@@ -59,6 +61,8 @@ namespace Assignment2
                     Console.WriteLine(Thread.CurrentThread.Name + " received order confirmation from " + order.GetSenderId() + " for order of unit price " + order.GetUnitPrice() + ".");
                 }
             }
+
+            Console.WriteLine("TRAVEL AGENCY THREAD TERMINATING: " + Thread.CurrentThread.Name);
         }
 
         // Event handler for the Airline to call when a price-cut event occurs

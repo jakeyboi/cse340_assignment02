@@ -49,8 +49,10 @@ namespace Assignment2
                 // If an order for the airline was received, process order
                 if (orderStr != null)
                 {
-                    MainProgram.orderBuffer.sem.Release(1);
                     OrderClass order = Decoder.DecodeOrder(orderStr);
+                    //Console.WriteLine("SEMAPHORE RELEASING 1 in Airline thread...");
+                    //Console.WriteLine("... for order of unit price " + order.GetUnitPrice() + ".");
+                    MainProgram.orderBuffer.sem.Release(1);
                     Console.WriteLine(Thread.CurrentThread.Name + " has received order from " + order.GetSenderId() + " for " + order.GetAmount() + " tickets at price " + order.GetUnitPrice() + " each.");
 
                     orderCounter++;
@@ -61,6 +63,7 @@ namespace Assignment2
                 }
             }
 
+            Console.WriteLine("AIRLINE THREAD TERMINATING: " + Thread.CurrentThread.Name);
             MainProgram.airlineThreadCount--;
         }
 
