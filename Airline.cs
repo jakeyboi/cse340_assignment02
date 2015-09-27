@@ -50,9 +50,8 @@ namespace Assignment2
                 if (orderStr != null)
                 {
                     OrderClass order = Decoder.DecodeOrder(orderStr);
-                    //Console.WriteLine("SEMAPHORE RELEASING 1 in Airline thread...");
-                    //Console.WriteLine("... for order of unit price " + order.GetUnitPrice() + ".");
                     MainProgram.orderBuffer.sem.Release(1);
+
                     Console.WriteLine(Thread.CurrentThread.Name + " has received order from " + order.GetSenderId() + " for " + order.GetAmount() + " tickets at price " + order.GetUnitPrice() + " each.");
 
                     orderCounter++;
